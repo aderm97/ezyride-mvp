@@ -13,37 +13,44 @@ export async function GET(req: Request) {
     const parsedTake = parseInt(searchParams.get('take') || '10', 10);
     const take = Number.isFinite(parsedTake) ? Math.min(Math.max(parsedTake, 1), 50) : 10;
 
-    // The driver's current location drives PostGIS nearest-first dispatch.
+    // Fetch pending rides
+    const pendingRides = await prisma.ride.findMany({
+      where: { status: "PENDING" },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+
+    // The driver's current location drives nearest-first dispatch.
     const driver = await prisma.user.findUnique({
       where: { id: session.id },
       select: { lat: true, lng: true },
     });
 
     if (driver?.lat != null && driver?.lng != null) {
-      // Real geospatial ranking: order pending pickups by great-circle distance
-      // from the driver using PostGIS geography (ST_Distance). The distance is
-      // returned so the UI can surface "N km away".
-      const rides = await prisma.$queryRaw`
-        SELECT r.*,
-          ST_Distance(
-            ST_SetSRID(ST_MakePoint(r."pickupLng", r."pickupLat"), 4326)::geography,
-            ST_SetSRID(ST_MakePoint(${driver.lng}, ${driver.lat}), 4326)::geography
-          ) AS "distanceMeters"
-        FROM "Ride" r
-        WHERE r.status = 'PENDING'
-        ORDER BY "distanceMeters" ASC
-        LIMIT ${take}
-      `;
-      return NextResponse.json(rides);
+      // Haversine distance calculation in JavaScript to avoid PostGIS dependency errors
+      const toRad = (value: number) => (value * Math.PI) / 180;
+      const getDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+        const R = 6371e3; // Earth radius in meters
+        const dLat = toRad(lat2 - lat1);
+        const dLng = toRad(lng2 - lng1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      };
+
+      const ridesWithDistance = pendingRides.map(r => ({
+        ...r,
+        distanceMeters: getDistance(r.pickupLat, r.pickupLng, driver.lat!, driver.lng!),
+      }));
+
+      ridesWithDistance.sort((a, b) => a.distanceMeters - b.distanceMeters);
+      
+      return NextResponse.json(ridesWithDistance.slice(0, take));
     }
 
-    // No driver location yet → newest-first fallback.
-    const pendingRides = await prisma.ride.findMany({
-      where: { status: "PENDING" },
-      orderBy: { createdAt: 'desc' },
-      take,
-    });
-    return NextResponse.json(pendingRides);
+    return NextResponse.json(pendingRides.slice(0, take));
   } catch (error) {
     console.error('Poll pending rides API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
