@@ -152,13 +152,7 @@ export function LiveMap({ pickupLat, pickupLng, dropoffLat, dropoffLng, status }
     return () => cancelAnimationFrame(animId);
   }, [status, pickupLat, pickupLng, dropoffLat, dropoffLng]);
 
-  if (!pickup) {
-    return (
-      <div className="absolute inset-0 bg-surface w-full h-full z-0 flex items-center justify-center">
-        <div className="absolute inset-0 bg-[image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-40" />
-      </div>
-    );
-  }
+  const mapCenter = pickup || ([6.5244, 3.3792] as [number, number]); // Default to Lagos
 
   return (
     <div className="absolute inset-0 w-full h-full z-0">
@@ -180,7 +174,7 @@ export function LiveMap({ pickupLat, pickupLng, dropoffLat, dropoffLng, status }
       </AnimatePresence>
 
       <MapContainer
-        center={pickup}
+        center={mapCenter}
         zoom={14}
         zoomControl={false}
         attributionControl={false}
@@ -194,7 +188,7 @@ export function LiveMap({ pickupLat, pickupLng, dropoffLat, dropoffLng, status }
         <MapController driverPos={driverPos} pickup={pickup} dropoff={dropoff} status={status} />
 
         {/* Pickup Marker */}
-        <Marker position={pickup} icon={riderIcon} />
+        {pickup && <Marker position={pickup} icon={riderIcon} />}
 
         {/* Dropoff Marker */}
         {dropoff && <Marker position={dropoff} icon={destinationIcon} />}

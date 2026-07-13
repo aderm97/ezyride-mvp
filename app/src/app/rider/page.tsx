@@ -97,16 +97,26 @@ export default function RiderPage() {
 
       // Auto-detect location for a frictionless pickup
       if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          setCurrentLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
-            const data = await res.json();
-            setPickup(data?.display_name ? data.display_name.split(',')[0] : 'Current Location');
-          } catch {
-            setPickup('Current Location');
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            setCurrentLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+            try {
+              const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+              const data = await res.json();
+              setPickup(data?.display_name ? data.display_name.split(',')[0] : 'Current Location');
+            } catch {
+              setPickup('Current Location');
+            }
+          },
+          (error) => {
+            console.warn("Geolocation blocked or failed. Falling back to Lagos.", error);
+            setCurrentLocation(LAGOS);
+            setPickup('Lagos'); // Let the user know we defaulted to Lagos
           }
-        });
+        );
+      } else {
+        setCurrentLocation(LAGOS);
+        setPickup('Lagos');
       }
 
       setIsMounted(true);
