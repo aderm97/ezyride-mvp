@@ -31,19 +31,7 @@ const nextConfig: NextConfig = {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
 
-  // Serve the bespoke static landing page at the site root. `beforeFiles`
-  // runs ahead of the App Router, so "/" resolves to the self-contained
-  // landing bundle in /public/landing while the app owns /login, /rider,
-  // /driver and /api.
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: '/', destination: '/landing' },
-      ],
-      afterFiles: [],
-      fallback: [],
-    };
-  },
+
 };
 
 export default nextConfig;
