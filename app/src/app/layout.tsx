@@ -39,6 +39,7 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from '@/components/Providers';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function RootLayout({
   children,
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} bg-background text-text-primary antialiased selection:bg-accent selection:text-on-accent overflow-x-hidden`}>
         <Providers>
           {children}
+          <ThemeToggle />
         </Providers>
       </body>
     </html>
