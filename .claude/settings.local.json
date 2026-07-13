@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Test-NetConnection -ComputerName localhost -Port 5173 -InformationLevel Quiet)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python api/seed.py)",
+      "Bash(python api/seed.py --emit env)",
+      "Bash(cd \"C:/Users/BEACON POWER SERVICE/Documents\" && ls -la 2>/dev/null | head -50)",
+      "Bash(cd \"C:/Users/BEACON POWER SERVICE/Downloads/ezyride-main/ezyride-main\" && find . -type f -not -path './.git/*' -not -path './node_modules/*' -not -path '*/vendor/*' -not -path '*/.next/*' -not -path '*/build/*' -not -path '*/dist/*' | sort | head -200)",
+      "Bash(npx prisma *)",
+      "Bash(docker exec *)",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(echo \"email: $\\(git config user.email\\)\")",
+      "Bash(echo \"name: $\\(git config user.name\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(curl -s -o /dev/null -w \"status=%{http_code}\\\\n\" http://localhost:3007/)",
+      "Bash(curl -s http://localhost:3007/)",
+      "Bash(curl -s http://localhost:3007/api/users/me)",
+      "Bash(mkdir -p app/public/landing/assets)",
+      "Bash(cp index.html app/public/landing/index.html)",
+      "Bash(cp styles.css app/public/landing/styles.css)",
+      "Bash(cp script.js app/public/landing/script.js)",
+      "Bash(cp assets/* app/public/landing/assets/)",
+      "Bash(grep -E '\\\\.env$|\\\\.env\\\\.local|node_modules')",
+      "Skill(code-review)",
+      "Skill(code-review:*)",
+      "Read(//c/tmp/**)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(taskkill //PID 39432 //F)",
+      "mcp__Claude_Browser__preview_start"
+    ]
+  }
+}

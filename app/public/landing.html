@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EzyRide — Private Chauffeur &amp; Luxury E-Hailing</title>
+  <meta name="description" content="Experience unparalleled luxury travel with EzyRide. Elite chauffeurs, world-class vehicles, and absolute discretion — on demand." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0A0A0A',
+            charcoal: {
+              DEFAULT: '#1A1A1A',
+              light: '#222222',
+              dark: '#111111',
+            },
+            champagne: {
+              DEFAULT: '#C9A96E',
+              light: '#D4BA85',
+              dark: '#B8944F',
+              muted: 'rgba(201, 169, 110, 0.15)',
+            },
+            silver: '#8A8A8A',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            luxury: '0.25em',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* === SCROLL BAR === */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0A0A0A; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C9A96E; }
+
+    /* === HERO LOAD ANIMATIONS === */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes widthGrow {
+      from { width: 0; }
+      to   { width: 80px; }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    .animate-fade-in {
+      animation: fadeIn 1.2s ease forwards;
+      opacity: 0;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-700 { animation-delay: 0.7s; }
+    .delay-800 { animation-delay: 0.8s; }
+
+    /* === SCROLL REVEAL === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === GOLDEN DIVIDER LINE === */
+    .gold-line {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #C9A96E, transparent);
+      animation: widthGrow 1s ease forwards;
+    }
+
+    /* === BUTTON GLOW === */
+    .btn-glow {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #C9A96E, #D4BA85, #C9A96E);
+      border-radius: inherit;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+      filter: blur(12px);
+    }
+    .btn-glow:hover::before { opacity: 0.5; }
+    .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201, 169, 110, 0.25); }
+
+    /* === NAV LINK UNDERLINE === */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #C9A96E;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link:hover { color: #C9A96E; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* === FLEET CARD HOVER === */
+    .fleet-card {
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fleet-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(201, 169, 110, 0.15);
+    }
+    .fleet-card:hover .fleet-img {
+      transform: scale(1.05);
+    }
+    .fleet-card:hover .fleet-badge {
+      background: #C9A96E;
+      color: #0A0A0A;
+    }
+
+    /* === EXPERIENCE CARD HOVER === */
+    .exp-card {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .exp-card:hover {
+      background: rgba(201, 169, 110, 0.06);
+      border-color: rgba(201, 169, 110, 0.25);
+      transform: translateY(-4px);
+    }
+    .exp-card:hover .exp-icon {
+      color: #C9A96E;
+      transform: scale(1.1);
+    }
+
+    /* === INPUT FOCUS === */
+    .input-luxury {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .input-luxury:focus {
+      border-color: #C9A96E;
+      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+      outline: none;
+    }
+
+    /* === NAVBAR GLASS === */
+    .nav-glass {
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
+
+    /* === SHIMMER TEXT === */
+    .shimmer-text {
+      background: linear-gradient(
+        110deg,
+        #C9A96E 0%,
+        #D4BA85 25%,
+        #E8D5A8 50%,
+        #D4BA85 75%,
+        #C9A96E 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+    }
+
+    /* === PARALLAX HERO === */
+    .hero-bg {
+      transition: transform 0.1s linear;
+    }
+  </style>
+</head>
+
+<body class="bg-obsidian text-white font-sans antialiased overflow-x-hidden">
+
+  <!-- ════════════════════════════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════════════════════════════ -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-glass bg-obsidian/80 border-b border-white/[0.04] transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-champagne to-champagne-dark flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <svg class="w-4 h-4 text-obsidian" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="text-xl font-light tracking-wider text-white">ezy<span class="font-semibold">ride</span></span>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden md:flex items-center gap-10">
+          <a href="#experience" class="nav-link text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium">The Experience</a>
+          <a href="#fleet" class="nav-link text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium">The Fleet</a>
+          <a href="#services" class="nav-link text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium">Services</a>
+          <a href="#corporate" class="nav-link text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium">Corporate</a>
+        </div>
+
+        <!-- Reserve Button -->
+        <div class="hidden md:block">
+          <a href="#hero" class="btn-glow inline-flex items-center gap-2 px-7 py-3 bg-champagne text-obsidian text-sm font-semibold tracking-wider uppercase rounded-full">
+            <span>Reserve</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menuBtn" class="md:hidden flex flex-col gap-1.5 p-2 group" aria-label="Toggle menu">
+          <span class="block w-6 h-[1.5px] bg-white transition-all duration-300 origin-center" id="bar1"></span>
+          <span class="block w-6 h-[1.5px] bg-white transition-all duration-300" id="bar2"></span>
+          <span class="block w-4 h-[1.5px] bg-champagne transition-all duration-300 origin-center" id="bar3"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-charcoal-dark/95 nav-glass">
+      <div class="px-6 py-8 flex flex-col gap-6">
+        <a href="#experience" class="text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium transition-colors mobile-link">The Experience</a>
+        <a href="#fleet" class="text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium transition-colors mobile-link">The Fleet</a>
+        <a href="#services" class="text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium transition-colors mobile-link">Services</a>
+        <a href="#corporate" class="text-sm tracking-wider text-silver hover:text-champagne uppercase font-medium transition-colors mobile-link">Corporate</a>
+        <div class="pt-4 border-t border-white/[0.06]">
+          <a href="#hero" class="btn-glow inline-flex items-center gap-2 px-7 py-3 bg-champagne text-obsidian text-sm font-semibold tracking-wider uppercase rounded-full w-full justify-center">
+            Reserve Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       HERO SECTION
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0 hero-bg">
+      <img
+        src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920&q=80"
+        alt="Luxury vehicle at dusk"
+        class="w-full h-full object-cover"
+      />
+      <!-- Gradient Overlays -->
+      <div class="absolute inset-0 bg-gradient-to-b from-obsidian/70 via-obsidian/50 to-obsidian"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-obsidian/60 via-transparent to-obsidian/60"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-32 pb-20 text-center">
+      <!-- Overline -->
+      <p class="animate-fade-in-up delay-100 text-champagne text-xs sm:text-sm font-medium tracking-luxury uppercase mb-6">
+        Private Chauffeur &amp; Luxury E-Hailing
+      </p>
+
+      <!-- Main Headline -->
+      <h1 class="animate-fade-in-up delay-200 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6">
+        Arrive in<br />
+        <span class="shimmer-text">Absolute Elegance</span>
+      </h1>
+
+      <!-- Sub-headline -->
+      <p class="animate-fade-in-up delay-300 text-base sm:text-lg md:text-xl text-silver max-w-2xl mx-auto leading-relaxed mb-12 font-light">
+        Where every journey becomes a statement. World-class chauffeurs, impeccable vehicles, and the discretion you deserve — available at a moment's notice.
+      </p>
+
+      <!-- Booking Widget -->
+      <div class="animate-fade-in-up delay-500 max-w-4xl mx-auto">
+        <div class="bg-charcoal-dark/80 nav-glass rounded-2xl border border-white/[0.06] p-4 sm:p-6 lg:p-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-2 items-center">
+
+            <!-- Pick-up -->
+            <div class="relative">
+              <label class="absolute -top-2.5 left-4 text-[10px] uppercase tracking-luxury text-champagne bg-charcoal-dark/80 px-2 font-medium">Pick-up</label>
+              <div class="flex items-center gap-3 px-4 py-4 rounded-xl border border-white/[0.08] bg-charcoal/50 input-luxury">
+                <svg class="w-4 h-4 text-champagne flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                <input type="text" placeholder="Pick-up location" class="bg-transparent w-full text-sm text-white placeholder-silver/50 outline-none font-light" />
+              </div>
+            </div>
+
+            <!-- Drop-off -->
+            <div class="relative">
+              <label class="absolute -top-2.5 left-4 text-[10px] uppercase tracking-luxury text-champagne bg-charcoal-dark/80 px-2 font-medium">Drop-off</label>
+              <div class="flex items-center gap-3 px-4 py-4 rounded-xl border border-white/[0.08] bg-charcoal/50 input-luxury">
+                <svg class="w-4 h-4 text-champagne flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                <input type="text" placeholder="Destination" class="bg-transparent w-full text-sm text-white placeholder-silver/50 outline-none font-light" />
+              </div>
+            </div>
+
+            <!-- Date & Time -->
+            <div class="relative">
+              <label class="absolute -top-2.5 left-4 text-[10px] uppercase tracking-luxury text-champagne bg-charcoal-dark/80 px-2 font-medium">When</label>
+              <div class="flex items-center gap-3 px-4 py-4 rounded-xl border border-white/[0.08] bg-charcoal/50 input-luxury">
+                <svg class="w-4 h-4 text-champagne flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                <input type="datetime-local" class="bg-transparent w-full text-sm text-white outline-none font-light [color-scheme:dark]" />
+              </div>
+            </div>
+
+            <!-- Request Ride Button -->
+            <button class="btn-glow flex items-center justify-center gap-2 px-6 py-4 bg-champagne text-obsidian text-sm font-bold tracking-wider uppercase rounded-xl w-full">
+              <span>Request Ride</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="animate-fade-in delay-700 flex flex-wrap items-center justify-center gap-6 sm:gap-10 mt-8 text-silver/50 text-[11px] tracking-wider uppercase font-medium">
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-champagne/60" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            No surge pricing
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-champagne/60" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Free cancellation
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-champagne/60" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            24/7 concierge
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in delay-800">
+      <div class="w-[1px] h-12 bg-gradient-to-b from-champagne/60 to-transparent mx-auto mb-2"></div>
+      <p class="text-[10px] tracking-luxury uppercase text-silver/40 font-medium">Scroll</p>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       THE EXPERIENCE
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="experience" class="relative py-24 sm:py-32 lg:py-40">
+    <!-- Subtle Background Accent -->
+    <div class="absolute inset-0 bg-gradient-to-b from-obsidian via-charcoal-dark/30 to-obsidian pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-20 reveal">
+        <p class="text-champagne text-xs sm:text-sm font-medium tracking-luxury uppercase mb-4">Why EzyRide</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+          The Experience,<br class="hidden sm:block" /> Redefined
+        </h2>
+        <div class="gold-line mx-auto mb-6"></div>
+        <p class="text-silver text-base sm:text-lg max-w-xl mx-auto leading-relaxed font-light">
+          We don't just get you there. We elevate every mile into an experience worthy of your time.
+        </p>
+      </div>
+
+      <!-- Three Pillars -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+        <!-- Elite Chauffeurs -->
+        <div class="exp-card reveal group rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 p-8 sm:p-10 text-center">
+          <div class="exp-icon inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-champagne-muted mb-8 transition-all duration-400">
+            <svg class="w-7 h-7 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg sm:text-xl font-semibold mb-4 tracking-tight">Elite Chauffeurs</h3>
+          <p class="text-silver text-sm leading-relaxed font-light">
+            Professionally trained, background-verified, and fluent in the art of discretion. Our chauffeurs don't just drive — they anticipate, adapt, and deliver flawless service with every journey.
+          </p>
+        </div>
+
+        <!-- Absolute Discretion -->
+        <div class="exp-card reveal group rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 p-8 sm:p-10 text-center" style="transition-delay: 0.1s">
+          <div class="exp-icon inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-champagne-muted mb-8 transition-all duration-400">
+            <svg class="w-7 h-7 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg sm:text-xl font-semibold mb-4 tracking-tight">Absolute Discretion</h3>
+          <p class="text-silver text-sm leading-relaxed font-light">
+            Your privacy isn't a feature — it's a promise. End-to-end encrypted communications, NDA-bound chauffeurs, and zero data sharing. What happens in the ride stays in the ride.
+          </p>
+        </div>
+
+        <!-- Unmatched Punctuality -->
+        <div class="exp-card reveal group rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 p-8 sm:p-10 text-center" style="transition-delay: 0.2s">
+          <div class="exp-icon inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-champagne-muted mb-8 transition-all duration-400">
+            <svg class="w-7 h-7 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg sm:text-xl font-semibold mb-4 tracking-tight">Unmatched Punctuality</h3>
+          <p class="text-silver text-sm leading-relaxed font-light">
+            We monitor flights, track traffic in real time, and position our vehicles ahead of schedule. Early is on time, and on time is late. You'll never wait — not even once.
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="reveal mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4 border-t border-white/[0.06] pt-16">
+        <div class="text-center">
+          <p class="text-3xl sm:text-4xl font-bold shimmer-text mb-2">98.7%</p>
+          <p class="text-silver text-xs tracking-wider uppercase font-medium">On-Time Arrivals</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl sm:text-4xl font-bold shimmer-text mb-2">50K+</p>
+          <p class="text-silver text-xs tracking-wider uppercase font-medium">Journeys Completed</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl sm:text-4xl font-bold shimmer-text mb-2">4.97</p>
+          <p class="text-silver text-xs tracking-wider uppercase font-medium">Average Rating</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl sm:text-4xl font-bold shimmer-text mb-2">24/7</p>
+          <p class="text-silver text-xs tracking-wider uppercase font-medium">Concierge Support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       THE FLEET
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="fleet" class="relative py-24 sm:py-32 lg:py-40">
+    <div class="absolute inset-0 bg-gradient-to-b from-obsidian via-charcoal-dark/20 to-obsidian pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-20 reveal">
+        <p class="text-champagne text-xs sm:text-sm font-medium tracking-luxury uppercase mb-4">Select Your Vehicle</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">The Fleet</h2>
+        <div class="gold-line mx-auto mb-6"></div>
+        <p class="text-silver text-base sm:text-lg max-w-xl mx-auto leading-relaxed font-light">
+          Every vehicle in our fleet is hand-selected, meticulously maintained, and designed to make a lasting impression.
+        </p>
+      </div>
+
+      <!-- Fleet Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+        <!-- Executive Sedan -->
+        <div class="fleet-card reveal rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 overflow-hidden group">
+          <div class="relative h-56 sm:h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80"
+              alt="Mercedes-Benz Executive Sedan"
+              class="fleet-img w-full h-full object-cover transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-dark via-transparent to-transparent"></div>
+            <span class="fleet-badge absolute top-4 right-4 px-3 py-1 rounded-full bg-white/10 nav-glass text-[10px] tracking-wider uppercase font-semibold text-champagne border border-champagne/20 transition-all duration-300">
+              Most Popular
+            </span>
+          </div>
+          <div class="p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold tracking-tight">Executive Sedan</h3>
+              <p class="text-champagne text-sm font-medium">From $85</p>
+            </div>
+            <p class="text-silver text-sm leading-relaxed font-light mb-6">
+              The Mercedes-Benz E-Class. Refined power meets understated elegance — ideal for boardroom-to-dinner seamlessness.
+            </p>
+            <div class="flex items-center gap-4 text-[11px] text-silver/60 uppercase tracking-wider font-medium">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>
+                3 Guests
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                2 Luggage
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0"/></svg>
+                Wi-Fi
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium SUV -->
+        <div class="fleet-card reveal rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 overflow-hidden group" style="transition-delay: 0.1s">
+          <div class="relative h-56 sm:h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=80"
+              alt="Range Rover Premium SUV"
+              class="fleet-img w-full h-full object-cover transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-dark via-transparent to-transparent"></div>
+            <span class="fleet-badge absolute top-4 right-4 px-3 py-1 rounded-full bg-white/10 nav-glass text-[10px] tracking-wider uppercase font-semibold text-champagne border border-champagne/20 transition-all duration-300">
+              Executive
+            </span>
+          </div>
+          <div class="p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold tracking-tight">Premium SUV</h3>
+              <p class="text-champagne text-sm font-medium">From $125</p>
+            </div>
+            <p class="text-silver text-sm leading-relaxed font-light mb-6">
+              The Range Rover Autobiography. Command every road with panoramic luxury, hand-stitched interiors, and effortless authority.
+            </p>
+            <div class="flex items-center gap-4 text-[11px] text-silver/60 uppercase tracking-wider font-medium">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>
+                5 Guests
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                4 Luggage
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0"/></svg>
+                Wi-Fi
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- First-Class Sprinter -->
+        <div class="fleet-card reveal rounded-2xl border border-white/[0.06] bg-charcoal-dark/40 overflow-hidden group" style="transition-delay: 0.2s">
+          <div class="relative h-56 sm:h-64 overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80"
+              alt="First-Class Mercedes-Benz Sprinter"
+              class="fleet-img w-full h-full object-cover transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal-dark via-transparent to-transparent"></div>
+            <span class="fleet-badge absolute top-4 right-4 px-3 py-1 rounded-full bg-white/10 nav-glass text-[10px] tracking-wider uppercase font-semibold text-champagne border border-champagne/20 transition-all duration-300">
+              First Class
+            </span>
+          </div>
+          <div class="p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold tracking-tight">First-Class Sprinter</h3>
+              <p class="text-champagne text-sm font-medium">From $195</p>
+            </div>
+            <p class="text-silver text-sm leading-relaxed font-light mb-6">
+              The Mercedes-Benz V-Class. A private lounge on wheels — reclining captain's chairs, ambient lighting, and a mobile office suite.
+            </p>
+            <div class="flex items-center gap-4 text-[11px] text-silver/60 uppercase tracking-wider font-medium">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>
+                7 Guests
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                6 Luggage
+              </span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0"/></svg>
+                Wi-Fi
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SERVICES (Corporate / Concierge)
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="services" class="relative py-24 sm:py-32 lg:py-40 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-obsidian via-charcoal-dark/30 to-obsidian pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <!-- Left Content -->
+        <div class="reveal">
+          <p class="text-champagne text-xs sm:text-sm font-medium tracking-luxury uppercase mb-4">Tailored Services</p>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">Beyond<br />Transportation</h2>
+          <div class="gold-line mb-8"></div>
+          <p class="text-silver text-base sm:text-lg leading-relaxed font-light mb-10">
+            From airport concierge to multi-city corporate accounts, EzyRide seamlessly integrates into your lifestyle. Every detail is managed, every preference remembered.
+          </p>
+
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-champagne-muted flex items-center justify-center mt-0.5">
+                <svg class="w-5 h-5 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold mb-1 tracking-tight">Airport Transfers</h4>
+                <p class="text-silver text-sm font-light leading-relaxed">Flight-tracked arrivals, meet-and-greet service, and priority routing to get you home or to your hotel without a single delay.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-champagne-muted flex items-center justify-center mt-0.5">
+                <svg class="w-5 h-5 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21"/></svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold mb-1 tracking-tight">Corporate Accounts</h4>
+                <p class="text-silver text-sm font-light leading-relaxed">Centralised billing, employee ride management, and dedicated account managers for enterprises that demand consistency.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-champagne-muted flex items-center justify-center mt-0.5">
+                <svg class="w-5 h-5 text-champagne" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold mb-1 tracking-tight">Special Occasions</h4>
+                <p class="text-silver text-sm font-light leading-relaxed">Weddings, anniversaries, red-carpet events. We curate vehicle décor, champagne service, and bespoke routing for your milestone moments.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Image -->
+        <div class="reveal relative" style="transition-delay: 0.15s">
+          <div class="relative rounded-2xl overflow-hidden border border-white/[0.06]">
+            <img
+              src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80"
+              alt="Professional chauffeur opening car door"
+              class="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <p class="text-champagne text-xs tracking-luxury uppercase font-medium mb-1">Available 24/7</p>
+              <p class="text-white/80 text-sm font-light">In 30+ cities worldwide</p>
+            </div>
+          </div>
+          <!-- Decorative Element -->
+          <div class="absolute -top-4 -right-4 w-24 h-24 border border-champagne/20 rounded-2xl -z-10 hidden lg:block"></div>
+          <div class="absolute -bottom-4 -left-4 w-32 h-32 border border-champagne/10 rounded-2xl -z-10 hidden lg:block"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       CTA SECTION
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="corporate" class="relative py-24 sm:py-32 lg:py-40 overflow-hidden">
+    <div class="absolute inset-0">
+      <img
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80"
+        alt="City skyline at night"
+        class="w-full h-full object-cover opacity-20"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-obsidian via-obsidian/90 to-obsidian"></div>
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 lg:px-8 text-center reveal">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-champagne/20 bg-champagne-muted mb-8">
+        <div class="w-1.5 h-1.5 rounded-full bg-champagne animate-pulse"></div>
+        <span class="text-champagne text-[11px] tracking-wider uppercase font-medium">Now Accepting Reservations</span>
+      </div>
+
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+        Your Journey<br />
+        <span class="shimmer-text">Awaits</span>
+      </h2>
+      <p class="text-silver text-base sm:text-lg max-w-xl mx-auto leading-relaxed font-light mb-10">
+        Step into a world where luxury isn't a choice — it's the standard. Download the app or speak directly with our concierge team.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#hero" class="btn-glow inline-flex items-center gap-3 px-8 py-4 bg-champagne text-obsidian text-sm font-bold tracking-wider uppercase rounded-full w-full sm:w-auto justify-center">
+          <span>Reserve Now</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="#" class="inline-flex items-center gap-3 px-8 py-4 border border-white/[0.12] text-white text-sm font-medium tracking-wider uppercase rounded-full hover:border-champagne/40 hover:text-champagne transition-all duration-300 w-full sm:w-auto justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+          <span>Call Concierge</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════════ -->
+  <footer class="relative border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <!-- Brand -->
+        <div class="md:col-span-1">
+          <a href="#" class="flex items-center gap-2 mb-6">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-champagne to-champagne-dark flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-obsidian" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span class="text-lg font-light tracking-wider text-white">ezy<span class="font-semibold">ride</span></span>
+          </a>
+          <p class="text-silver/60 text-sm font-light leading-relaxed mb-6">
+            Redefining luxury ground transportation for those who expect nothing less than extraordinary.
+          </p>
+          <!-- Social Icons -->
+          <div class="flex items-center gap-4">
+            <a href="#" class="w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-silver/50 hover:text-champagne hover:border-champagne/30 transition-all duration-300" aria-label="Instagram">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-silver/50 hover:text-champagne hover:border-champagne/30 transition-all duration-300" aria-label="X (Twitter)">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-silver/50 hover:text-champagne hover:border-champagne/30 transition-all duration-300" aria-label="LinkedIn">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-xs tracking-luxury uppercase font-semibold text-white mb-6">Company</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">About EzyRide</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Careers</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Press & Media</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Partnerships</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div>
+          <h4 class="text-xs tracking-luxury uppercase font-semibold text-white mb-6">Services</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Airport Transfers</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Corporate Accounts</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Event Transport</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Hourly Chauffeur</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div>
+          <h4 class="text-xs tracking-luxury uppercase font-semibold text-white mb-6">Legal</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Privacy Policy</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Terms of Service</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Cookie Policy</a></li>
+            <li><a href="#" class="text-silver/60 text-sm font-light hover:text-champagne transition-colors duration-300">Accessibility</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="border-t border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-silver/40 text-xs font-light tracking-wide">
+          &copy; 2026 EzyRide. All rights reserved. Luxury is not negotiable.
+        </p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-silver/40 text-xs font-light hover:text-champagne transition-colors duration-300">Privacy</a>
+          <a href="#" class="text-silver/40 text-xs font-light hover:text-champagne transition-colors duration-300">Terms</a>
+          <a href="#" class="text-silver/40 text-xs font-light hover:text-champagne transition-colors duration-300">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════════════════════════ -->
+  <script>
+    // ── Mobile Menu Toggle ──
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const bar1 = document.getElementById('bar1');
+    const bar2 = document.getElementById('bar2');
+    const bar3 = document.getElementById('bar3');
+    let menuOpen = false;
+
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+        bar1.style.transform = 'rotate(45deg) translate(4px, 4px)';
+        bar2.style.opacity = '0';
+        bar3.style.transform = 'rotate(-45deg) translate(3px, -3px)';
+        bar3.style.width = '24px';
+      } else {
+        mobileMenu.style.maxHeight = '0';
+        bar1.style.transform = 'none';
+        bar2.style.opacity = '1';
+        bar3.style.transform = 'none';
+        bar3.style.width = '16px';
+      }
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.maxHeight = '0';
+        bar1.style.transform = 'none';
+        bar2.style.opacity = '1';
+        bar3.style.transform = 'none';
+        bar3.style.width = '16px';
+      });
+    });
+
+    // ── Navbar Scroll Effect ──
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+
+      if (currentScroll > 80) {
+        navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+        navbar.style.borderBottomColor = 'rgba(201, 169, 110, 0.08)';
+      } else {
+        navbar.style.background = 'rgba(10, 10, 10, 0.8)';
+        navbar.style.borderBottomColor = 'rgba(255, 255, 255, 0.04)';
+      }
+
+      lastScroll = currentScroll;
+    });
+
+    // ── Scroll Reveal (Intersection Observer) ──
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -60px 0px',
+    });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+
+    // ── Smooth Scroll for anchor links ──
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

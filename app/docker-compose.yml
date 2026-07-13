@@ -1,0 +1,24 @@
+# Local Postgres + PostGIS for Ezyride development.
+# Usage:  docker compose up -d   (from the app/ directory)
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: ezyride-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ezyride
+      POSTGRES_PASSWORD: ezyride
+      POSTGRES_DB: ezyride
+    # Host port 5433 (5432 is occupied by a separate pre-existing container)
+    ports:
+      - "5433:5432"
+    volumes:
+      - ezyride_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ezyride -d ezyride"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  ezyride_pgdata:

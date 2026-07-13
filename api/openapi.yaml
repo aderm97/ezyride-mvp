@@ -1,0 +1,579 @@
+openapi: 3.1.0
+info:
+  title: Ezyride API
+  version: "1.0.0-mvp"
+  summary: Premium 100% electric airport e-hailing — Web MVP API
+  description: |
+    REST API for the Ezyride Web MVP. Demonstrates the full ride lifecycle for two
+    roles — **rider** (Premium Traveler) and **chauffeur** (Professional EV Chauffeur):
+    authentication, geospatial pickup, flight-aware airport metadata, EV tier selection,
+    fare estimation, ride request, driver matching (state machine), and completion.
+
+    Brand essence: *Frictionless Luxury*. Out of scope for this MVP: real payment
+    settlement, in-app chat, routing optimisation, native apps, live GPS streaming.
+  contact:
+    name: Ezyride Product
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.ezyride.example/api/v1
+    description: Production demo
+  - url: http://localhost:8000/api/v1
+    description: Local development
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Fleet
+  - name: Airports
+  - name: Flights
+  - name: Quotes
+  - name: Rides
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ----------------------------- Auth -----------------------------
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a rider or chauffeur account
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Exchange credentials for tokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Exchange a refresh token for a new access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: New tokens issued
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  # ----------------------------- Users -----------------------------
+  /me:
+    get:
+      tags: [Users]
+      summary: Current authenticated user
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /me/availability:
+    patch:
+      tags: [Users]
+      summary: Set chauffeur availability (chauffeur role only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [available]
+              properties:
+                available: { type: boolean }
+                location: { $ref: '#/components/schemas/GeoPoint' }
+      responses:
+        '200':
+          description: Availability updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  # ----------------------------- Fleet -----------------------------
+  /fleet/tiers:
+    get:
+      tags: [Fleet]
+      summary: List the five EV vehicle tiers
+      security: []
+      responses:
+        '200':
+          description: Fleet tiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/FleetTier' }
+
+  # ----------------------------- Airports -----------------------------
+  /airports:
+    get:
+      tags: [Airports]
+      summary: Supported airports and terminals
+      security: []
+      responses:
+        '200':
+          description: Airports
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Airport' }
+
+  # ----------------------------- Flights -----------------------------
+  /flights/{flightNo}:
+    get:
+      tags: [Flights]
+      summary: (Mocked) flight status for flight-aware pickup
+      parameters:
+        - name: flightNo
+          in: path
+          required: true
+          schema: { type: string, examples: ["BA075"] }
+      responses:
+        '200':
+          description: Flight status
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Flight' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ----------------------------- Quotes -----------------------------
+  /quotes:
+    post:
+      tags: [Quotes]
+      summary: Fare estimate for a route + tier (fixed, all-in)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/QuoteRequest' }
+      responses:
+        '200':
+          description: Quote
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Quote' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  # ----------------------------- Rides -----------------------------
+  /rides/request:
+    post:
+      tags: [Rides]
+      summary: Create a ride from a valid quote (rider role)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RideRequest' }
+      responses:
+        '201':
+          description: Ride created in SEARCHING state
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ride' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /rides:
+    get:
+      tags: [Rides]
+      summary: List rides for the current user (role-scoped)
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/RideStatus' }
+      responses:
+        '200':
+          description: Rides
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Ride' }
+
+  /rides/available:
+    get:
+      tags: [Rides]
+      summary: Open requests matchable to this chauffeur (nearest-first)
+      responses:
+        '200':
+          description: Available rides
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Ride' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /rides/{id}:
+    get:
+      tags: [Rides]
+      summary: Get a ride (primary status endpoint)
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      responses:
+        '200':
+          description: Ride
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ride' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /rides/{id}/accept:
+    patch:
+      tags: [Rides]
+      summary: Chauffeur accepts a matched request
+      description: "Transition: SEARCHING/MATCHED → ACCEPTED. Only an available chauffeur may accept."
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      responses:
+        '200': { $ref: '#/components/responses/RideOk' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/IllegalTransition' }
+
+  /rides/{id}/arrive:
+    patch:
+      tags: [Rides]
+      summary: Chauffeur has arrived at pickup
+      description: "Transition: ACCEPTED → ARRIVED."
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      responses:
+        '200': { $ref: '#/components/responses/RideOk' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/IllegalTransition' }
+
+  /rides/{id}/start:
+    patch:
+      tags: [Rides]
+      summary: Begin the journey
+      description: "Transition: ARRIVED → IN_PROGRESS."
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      responses:
+        '200': { $ref: '#/components/responses/RideOk' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/IllegalTransition' }
+
+  /rides/{id}/complete:
+    patch:
+      tags: [Rides]
+      summary: Complete ride and finalise fare
+      description: "Transition: IN_PROGRESS → COMPLETED. Returns a receipt."
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      responses:
+        '200':
+          description: Completed ride with receipt
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ride' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/IllegalTransition' }
+
+  /rides/{id}/cancel:
+    patch:
+      tags: [Rides]
+      summary: Cancel a ride (rider or assigned chauffeur, pre-start only)
+      description: "Transition: any pre-IN_PROGRESS state → CANCELLED."
+      parameters: [{ $ref: '#/components/parameters/RideId' }]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        '200': { $ref: '#/components/responses/RideOk' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/IllegalTransition' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    RideId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    RideOk:
+      description: Ride after transition
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Ride' }
+    Unauthorized:
+      description: Missing or invalid credentials
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Authenticated but not permitted (wrong role or not the assigned party)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    IllegalTransition:
+      description: Requested state transition is not allowed from the current state
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ValidationError:
+      description: Request payload failed validation
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, examples: ["ILLEGAL_TRANSITION"] }
+            message: { type: string, examples: ["Cannot start a ride that has not been marked as arrived."] }
+
+    Role:
+      type: string
+      enum: [rider, chauffeur]
+
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: { type: integer, description: "Minor units (e.g. cents)", examples: [5900] }
+        currency: { type: string, examples: ["USD"] }
+
+    GeoPoint:
+      type: object
+      required: [lat, lng]
+      properties:
+        lat: { type: number, examples: [6.5774] }
+        lng: { type: number, examples: [3.3213] }
+        label: { type: string, examples: ["MMIA Terminal 2, Arrivals"] }
+
+    TierId:
+      type: string
+      enum: [economy, standard, executive, luxury, suv]
+
+    RideStatus:
+      type: string
+      enum: [SEARCHING, MATCHED, ACCEPTED, ARRIVED, IN_PROGRESS, COMPLETED, CANCELLED, NO_MATCH]
+
+    RegisterRequest:
+      type: object
+      required: [email, password, role, name]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password, minLength: 8 }
+        role: { $ref: '#/components/schemas/Role' }
+        name: { type: string }
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+
+    AuthResponse:
+      type: object
+      required: [accessToken, refreshToken, user]
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        user: { $ref: '#/components/schemas/User' }
+
+    User:
+      type: object
+      required: [id, email, role, name]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        role: { $ref: '#/components/schemas/Role' }
+        name: { type: string }
+        rating: { type: number, examples: [4.9] }
+        available: { type: boolean, description: "Chauffeur only" }
+        vehicle: { $ref: '#/components/schemas/Vehicle' }
+
+    Vehicle:
+      type: object
+      properties:
+        model: { type: string, examples: ["Tesla Model S"] }
+        plate: { type: string, examples: ["EZY-114"] }
+        color: { type: string, examples: ["Deep Blue"] }
+        tier: { $ref: '#/components/schemas/TierId' }
+
+    FleetTier:
+      type: object
+      required: [id, name, maxPassengers, baseFare]
+      properties:
+        id: { $ref: '#/components/schemas/TierId' }
+        name: { type: string, examples: ["Executive"] }
+        description: { type: string }
+        maxPassengers: { type: integer, examples: [4] }
+        luggage: { type: string, examples: ["3 large + 2 cabin"] }
+        exampleVehicles:
+          type: array
+          items: { type: string }
+          examples: [["Tesla Model S", "BMW i5"]]
+        baseFare: { $ref: '#/components/schemas/Money' }
+        perKm: { $ref: '#/components/schemas/Money' }
+
+    Airport:
+      type: object
+      required: [code, name, terminals]
+      properties:
+        code: { type: string, examples: ["LOS"] }
+        name: { type: string, examples: ["Murtala Muhammed International Airport"] }
+        location: { $ref: '#/components/schemas/GeoPoint' }
+        terminals:
+          type: array
+          items: { type: string }
+          examples: [["T1", "T2"]]
+        pickupSurcharge: { $ref: '#/components/schemas/Money' }
+
+    Flight:
+      type: object
+      required: [number, status]
+      properties:
+        number: { type: string, examples: ["BA075"] }
+        status:
+          type: string
+          enum: [SCHEDULED, DELAYED, BOARDING, IN_AIR, LANDED, ARRIVED, CANCELLED]
+        airportCode: { type: string, examples: ["LOS"] }
+        terminal: { type: string, examples: ["T2"] }
+        scheduledArrival: { type: string, format: date-time }
+        estimatedArrival: { type: string, format: date-time }
+
+    QuoteRequest:
+      type: object
+      required: [pickup, dropoff, tier]
+      properties:
+        pickup: { $ref: '#/components/schemas/GeoPoint' }
+        dropoff: { $ref: '#/components/schemas/GeoPoint' }
+        tier: { $ref: '#/components/schemas/TierId' }
+        airport:
+          type: object
+          properties:
+            code: { type: string }
+            terminal: { type: string }
+        flightNo: { type: string }
+
+    Quote:
+      type: object
+      required: [quoteId, tier, fare, distanceKm, etaMin]
+      properties:
+        quoteId: { type: string }
+        tier: { $ref: '#/components/schemas/TierId' }
+        fare: { $ref: '#/components/schemas/Money' }
+        distanceKm: { type: number, examples: [21.4] }
+        etaMin: { type: integer, examples: [27] }
+        airport:
+          type: object
+          properties:
+            code: { type: string }
+            terminal: { type: string }
+        breakdown:
+          type: object
+          properties:
+            base: { type: integer }
+            distance: { type: integer }
+            airportSurcharge: { type: integer }
+        expiresAt: { type: string, format: date-time }
+
+    RideRequest:
+      type: object
+      required: [quoteId, passengers]
+      properties:
+        quoteId: { type: string }
+        passengers: { type: integer, minimum: 1, examples: [2] }
+        flightNo: { type: string }
+        notes: { type: string }
+
+    Ride:
+      type: object
+      required: [id, status, tier]
+      properties:
+        id: { type: string, format: uuid }
+        status: { $ref: '#/components/schemas/RideStatus' }
+        tier: { $ref: '#/components/schemas/TierId' }
+        rider: { $ref: '#/components/schemas/User' }
+        chauffeur: { $ref: '#/components/schemas/User' }
+        pickup: { $ref: '#/components/schemas/GeoPoint' }
+        dropoff: { $ref: '#/components/schemas/GeoPoint' }
+        flight: { $ref: '#/components/schemas/Flight' }
+        fare: { $ref: '#/components/schemas/Money' }
+        passengers: { type: integer }
+        distanceKm: { type: number }
+        etaMin: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        receipt: { $ref: '#/components/schemas/Receipt' }
+
+    Receipt:
+      type: object
+      properties:
+        finalFare: { $ref: '#/components/schemas/Money' }
+        paymentStatus:
+          type: string
+          enum: [SETTLED]
+          description: "MVP stub — no real settlement."
+        completedAt: { type: string, format: date-time }

@@ -1,0 +1,327 @@
+@import "tailwindcss";
+
+/* ══════════════════════════════════════════════════════════════
+   EZYRIDE — STRICT TWO-TONE DESIGN SYSTEM
+   Brand Blue #0F2346 · Milk White #FAF9F6
+   Light = Milk White State: milk canvas, everything deep blue.
+   Dark  = Deep Blue State:  navy canvas, everything milk white.
+   No grays, no pure black, no pure white surfaces. No gold.
+   Legacy token names (champagne / obsidian / charcoal) are kept
+   alive but repointed to the brand accent so existing markup
+   reskins without per-element edits.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ---- Fixed brand constants (never flip) ---- */
+:root {
+  --brand-blue: #0F2346;
+  --milk: #FAF9F6;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LIGHT — Milk White State (default)
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --primary: var(--brand-blue);
+  --secondary: #F2F0E9;
+  --background: var(--milk);
+  --card: #FFFEFA;
+  --surface: #F2F0E9;
+  --surface-hover: #EAE7DE;
+  --text-primary: var(--brand-blue);
+  --text-secondary: rgba(15, 35, 70, 0.72);
+  --border: rgba(15, 35, 70, 0.16);
+  --border-strong: rgba(15, 35, 70, 0.34);
+  --background-rgb: 250, 249, 246;
+
+  /* Brand accent — Deep Blue on the Milk canvas */
+  --accent: var(--brand-blue);
+  --accent-hover: #1B3766;
+  --on-accent: var(--milk);
+  --accent-muted: rgba(15, 35, 70, 0.12);
+  --heading-accent: rgba(15, 35, 70, 0.5);
+  --shadow-soft: 0 1px 2px rgba(15, 35, 70, 0.06), 0 12px 32px -12px rgba(15, 35, 70, 0.16);
+  --shadow-lift: 0 2px 4px rgba(15, 35, 70, 0.07), 0 24px 48px -16px rgba(15, 35, 70, 0.24);
+
+  /* Shape + motion — inherited verbatim from the landing page (styles.css) */
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Legacy names → brand mapping (keeps old markup on-brand) */
+  --obsidian: var(--on-accent);          /* text drawn on accent fills */
+  --charcoal: var(--surface);
+  --charcoal-light: var(--surface-hover);
+  --charcoal-dark: var(--card);
+  --champagne: var(--accent);
+  --champagne-light: var(--accent-hover);
+  --champagne-dark: var(--accent);
+  --champagne-muted: var(--accent-muted);
+  --silver: var(--text-secondary);
+
+  color-scheme: light;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK — Deep Blue State
+   ══════════════════════════════════════════════════════════════ */
+[data-theme='dark'] {
+  --primary: var(--milk);
+  --secondary: #0B1A35;
+  --background: var(--brand-blue);
+  --card: #16305C;
+  --surface: #0B1A35;
+  --surface-hover: #1A335E;
+  --text-primary: var(--milk);
+  --text-secondary: rgba(250, 249, 246, 0.75);
+  --border: rgba(250, 249, 246, 0.18);
+  --border-strong: rgba(250, 249, 246, 0.38);
+  --background-rgb: 15, 35, 70;
+
+  /* Brand accent — Milk on the Deep Blue canvas */
+  --accent: var(--milk);
+  --accent-hover: #FFFEF8;
+  --on-accent: var(--brand-blue);
+  --accent-muted: rgba(250, 249, 246, 0.14);
+  --heading-accent: rgba(250, 249, 246, 0.55);
+  --shadow-soft: 0 1px 2px rgba(4, 11, 26, 0.5), 0 12px 32px -12px rgba(4, 11, 26, 0.65);
+  --shadow-lift: 0 2px 4px rgba(4, 11, 26, 0.55), 0 24px 48px -16px rgba(4, 11, 26, 0.75);
+
+  --obsidian: var(--on-accent);
+  --charcoal: var(--surface);
+  --charcoal-light: var(--surface-hover);
+  --charcoal-dark: var(--card);
+  --champagne: var(--accent);
+  --champagne-light: var(--accent-hover);
+  --champagne-dark: var(--accent);
+  --champagne-muted: var(--accent-muted);
+  --silver: var(--text-secondary);
+
+  color-scheme: dark;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — @theme (Tailwind v4)
+   ══════════════════════════════════════════════════════════════ */
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-accent-muted: var(--accent-muted);
+
+  /* Fixed brand colors for text/marks over imagery */
+  --color-brand: var(--brand-blue);
+  --color-milk: var(--milk);
+
+  /* Legacy aliases */
+  --color-obsidian: var(--obsidian);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-light: var(--charcoal-light);
+  --color-charcoal-dark: var(--charcoal-dark);
+  --color-champagne: var(--champagne);
+  --color-champagne-light: var(--champagne-light);
+  --color-champagne-dark: var(--champagne-dark);
+  --color-champagne-muted: var(--champagne-muted);
+  --color-silver: var(--silver);
+
+  /* Typography */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-space-grotesk), var(--font-inter);
+  --font-body: var(--font-inter);
+  --font-display: var(--font-space-grotesk), var(--font-inter);
+  --tracking-luxury: 0.22em;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BASE LAYER
+   ══════════════════════════════════════════════════════════════ */
+@layer base {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    @apply bg-background text-text-primary antialiased;
+    /* Inter body type — same family the landing page uses (next/font var). */
+    font-family: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+    transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  /* Wide-tracked geometric display type for all headings — Space Grotesk,
+     inherited verbatim from the landing page. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UTILITY LAYER
+   ══════════════════════════════════════════════════════════════ */
+@layer utilities {
+  /* Glassmorphism surface layers — translucent brand tint + blur.
+     Replaces the old flat panels (and any Neumorphism). */
+  .glass-panel {
+    background: color-mix(in srgb, var(--card) 72%, transparent);
+    border: 1px solid var(--border);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  .glass-heavy {
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border: 1px solid var(--border);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Brand radii — matches the landing page (styles.css) shape language. */
+  .rounded-field { border-radius: var(--radius-s); }
+  .rounded-panel { border-radius: var(--radius-m); }
+  .rounded-card  { border-radius: var(--radius-l); }
+
+  /* Navbar glass */
+  .nav-glass {
+    background: color-mix(in srgb, var(--background) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Brand divider line (was a gold gradient) */
+  .gold-line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: widthGrow 1s ease forwards;
+  }
+
+  /* Primary button — restrained brand lift, no gold glow */
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 0.25s ease;
+  }
+  .btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  /* Nav link underline — brand accent */
+  .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover { color: var(--accent); }
+  .nav-link:hover::after { width: 100%; }
+
+  /* Fleet card hover */
+  .fleet-card {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .fleet-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 60px -20px color-mix(in srgb, var(--brand-blue) 45%, transparent),
+                0 0 0 1px var(--border);
+  }
+  .fleet-card:hover .fleet-img { transform: scale(1.05); }
+  .fleet-card:hover .fleet-badge {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  /* Experience card hover */
+  .exp-card {
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .exp-card:hover {
+    background: var(--accent-muted);
+    border-color: var(--border-strong);
+    transform: translateY(-4px);
+  }
+  .exp-card:hover .exp-icon {
+    color: var(--accent);
+    transform: scale(1.1);
+  }
+
+  /* Input focus — brand accent ring */
+  .input-luxury {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .input-luxury:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-muted);
+    outline: none;
+  }
+
+  /* Editorial two-tone headline accent (replaces gold shimmer) */
+  .shimmer-text {
+    color: var(--accent);
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply w-full h-px bg-border;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLLBAR — brand-tinted
+   ══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+@keyframes widthGrow {
+  0% { width: 0; }
+  100% { width: 80px; }
+}
