@@ -49,10 +49,7 @@ export default function RiderPage() {
   const [isPricing, setIsPricing] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Airport
-  const [airports, setAirports] = useState<any[]>([]);
-  const [airportCode, setAirportCode] = useState<string>('');
-  const [terminal, setTerminal] = useState<string>('');
+
 
   const [rideId, setRideId] = useState('');
   const [driverInfo, setDriverInfo] = useState<any>(null);
@@ -72,9 +69,6 @@ export default function RiderPage() {
     loadRiderData();
   }, []);
 
-  useEffect(() => {
-    fetchApi('/airports').then(setAirports).catch(() => {});
-  }, []);
 
   const loadRiderData = async () => {
     try {
@@ -154,7 +148,6 @@ export default function RiderPage() {
           pickupLng: pickupCoords.lng,
           dropoffLat: dropoffCoords.lat,
           dropoffLng: dropoffCoords.lng,
-          airportCode: airportCode || undefined,
         })
       });
       setEstimates(res.estimates || []);
@@ -181,8 +174,6 @@ export default function RiderPage() {
           dropoffLat: coords.dropoff.lat,
           dropoffLng: coords.dropoff.lng,
           tier: selectedTier,
-          airportCode: airportCode || undefined,
-          terminal: terminal || undefined,
         })
       });
       setActiveRide(rideData);
@@ -253,8 +244,6 @@ export default function RiderPage() {
     setActiveRide(null);
     setDriverInfo(null);
     setRideId('');
-    setAirportCode('');
-    setTerminal('');
   };
 
   const handleLogout = async () => {
@@ -359,36 +348,7 @@ export default function RiderPage() {
                   </div>
                 </div>
 
-                {/* Airport pickup / drop-off (optional) */}
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] text-text-secondary tracking-[0.15em] uppercase">Airport</span>
-                    <span className="text-[10px] text-text-secondary">optional</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <select
-                      value={airportCode}
-                      onChange={(e) => { setAirportCode(e.target.value); setTerminal(''); }}
-                      className="bg-transparent border border-border rounded-field text-text-primary text-sm py-2.5 px-3 outline-none focus:border-accent"
-                    >
-                      <option value="">No airport</option>
-                      {airports.map((a) => (
-                        <option key={a.code} value={a.code}>{a.code} — {a.city}</option>
-                      ))}
-                    </select>
-                    <select
-                      value={terminal}
-                      onChange={(e) => setTerminal(e.target.value)}
-                      disabled={!airportCode}
-                      className="bg-transparent border border-border rounded-field text-text-primary text-sm py-2.5 px-3 outline-none focus:border-accent disabled:opacity-40"
-                    >
-                      <option value="">Terminal</option>
-                      {(airports.find((a) => a.code === airportCode)?.terminals || []).map((t: string) => (
-                        <option key={t} value={t}>{t}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+
 
                 <button
                   onClick={handleSeePrices}
@@ -411,14 +371,6 @@ export default function RiderPage() {
                   )}
                 </div>
 
-                {airportCode && (
-                  <div className="mb-4 p-3 border border-border rounded-field bg-accent/5 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-accent flex-shrink-0" />
-                    <span className="text-[11px] tracking-widest uppercase text-text-secondary">
-                      {airportCode}{terminal ? ` · ${terminal}` : ''} airport transfer
-                    </span>
-                  </div>
-                )}
 
                 <div className="flex flex-col gap-2 max-h-[44vh] overflow-y-auto -mx-1 px-1">
                   {estimates.map((e) => {
