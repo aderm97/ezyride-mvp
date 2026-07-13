@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
     });
   } catch (error) {
-    console.error('Register API error');
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Register API error:', error);
+    return NextResponse.json({ error: 'Internal server error', details: String(error) }, { status: 500 });
   }
 }
